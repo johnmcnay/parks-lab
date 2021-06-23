@@ -30,7 +30,7 @@ namespace ParksLab.Controllers
             return View();
         }
 
-        [Route("parks")]
+        [Route("parkdata")]
         public IActionResult Parks()
         {
 
