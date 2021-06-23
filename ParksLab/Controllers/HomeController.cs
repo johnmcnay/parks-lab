@@ -33,7 +33,7 @@ namespace ParksLab.Controllers
             return View();
         }
 
-        public string CallApi()
+        public List<ParkData> CallApi()
         {
             string json;
             
@@ -48,30 +48,27 @@ namespace ParksLab.Controllers
                 _cache.Set(CacheKeys.Entry, json, TimeSpan.FromMinutes(5));
             }
 
-            return json;
+            return JsonConvert.DeserializeObject<List<ParkData>>(json);
         }
 
         [Route("parkdata")]
-        public IActionResult Parks()
+        public IActionResult Parks(List<string> search)
         {
-            string json = CallApi();
-            var queries = Request.Query["search"];
-
-            List<ParkData> data = JsonConvert.DeserializeObject<List<ParkData>>(json);
+            List<ParkData> data = CallApi();
             
-            if (queries.Count == 0)
+            if (search.Count == 0)
             {
                 ViewBag.Data = data;
             }
             else
             {
-                ViewBag.Data = ParksMatchingQuery(data, queries);
+                ViewBag.Data = ParksMatchingQuery(data, search);
             }
 
             return View();
         }
 
-        private List<ParkData> ParksMatchingQuery(List<ParkData> data, Microsoft.Extensions.Primitives.StringValues queries)
+        private List<ParkData> ParksMatchingQuery(List<ParkData> data, List<string> queries)
         {
             List<ParkData> results = new List<ParkData>();
 
