@@ -33,12 +33,10 @@ namespace ParksLab.Controllers
             return View();
         }
 
-        [Route("parkdata")]
-        public IActionResult Parks()
+        public string CallApi()
         {
-
             string json;
-
+            
             //from code sample in https://docs.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-5.0
             //Look for cache key.
             if (!_cache.TryGetValue(CacheKeys.Entry, out json))
@@ -50,41 +48,53 @@ namespace ParksLab.Controllers
                 _cache.Set(CacheKeys.Entry, json, TimeSpan.FromMinutes(5));
             }
 
-            List<ParkData> data = JsonConvert.DeserializeObject<List<ParkData>>(json);
-            List<ParkData> results = new List<ParkData>();
+            return json;
+        }
 
+        [Route("parkdata")]
+        public IActionResult Parks()
+        {
+            string json = CallApi();
             var queries = Request.Query["search"];
-          
+
+            List<ParkData> data = JsonConvert.DeserializeObject<List<ParkData>>(json);
+            
             if (queries.Count == 0)
             {
                 ViewBag.Data = data;
             }
             else
             {
-                
-                foreach (ParkData park in data)
-                {
-                    bool hasSearchTerms = true;
-
-                    foreach (string query in queries)
-                    {
-                        if (!park.Parkname.ToLower().Contains(query.ToLower()) && !park.Description.ToLower().Contains(query.ToLower()))
-                        {
-                            hasSearchTerms = false;
-                            break;
-                        }
-                    }
-                    if (hasSearchTerms)
-                    {
-                        results.Add(park);
-                    }
-                }
-
-                ViewBag.Data = results;
+                ViewBag.Data = ParksMatchingQuery(data, queries);
             }
 
             return View();
         }
+
+        private List<ParkData> ParksMatchingQuery(List<ParkData> data, Microsoft.Extensions.Primitives.StringValues queries)
+        {
+            List<ParkData> results = new List<ParkData>();
+
+            foreach (ParkData park in data)
+            {
+                bool hasSearchTerms = true;
+
+                foreach (string query in queries)
+                {
+                    if (!park.Parkname.ToLower().Contains(query.ToLower()) && !park.Description.ToLower().Contains(query.ToLower()))
+                    {
+                        hasSearchTerms = false;
+                        break;
+                    }
+                }
+                if (hasSearchTerms)
+                {
+                    results.Add(park);
+                }
+            }
+            return results;
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
