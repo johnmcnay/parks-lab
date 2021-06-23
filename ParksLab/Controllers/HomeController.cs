@@ -37,32 +37,35 @@ namespace ParksLab.Controllers
             var json = new WebClient().DownloadString("https://seriouslyfundata.azurewebsites.net/api/parks");
             List<ParkData> data = JsonConvert.DeserializeObject<List<ParkData>>(json);
             List<ParkData> results = new List<ParkData>();
-            string search = null;
 
-            if (Request.Query.Count > 0)
-            {
-                foreach (var query in Request.Query)
-                {
-                    if (query.Key.ToLower() == "search")
-                    {
-                        search = query.Value;
-                        break;
-                    }
-                }
-            }
-
-            if (search == null)
+            var queries = Request.Query["search"];
+          
+            if (queries.Count == 0)
             {
                 ViewBag.Data = data;
-            } else
+            }
+            else
             {
-                foreach (var park in data)
+                
+                foreach (ParkData park in data)
                 {
-                    if (park.Parkname.ToLower().Contains(search.ToLower()) || park.Description.ToLower().Contains(search.ToLower()))
+                    bool hasSearchTerms = true;
+
+                    foreach (string query in queries)
+                    {
+                        if (!park.Parkname.ToLower().Contains(query.ToLower()) && !park.Description.ToLower().Contains(query.ToLower()))
+                        {
+                            hasSearchTerms = false;
+                            break;
+                        }
+                    }
+                    if (hasSearchTerms)
                     {
                         results.Add(park);
                     }
                 }
+
+
 
                 ViewBag.Data = results;
             }
