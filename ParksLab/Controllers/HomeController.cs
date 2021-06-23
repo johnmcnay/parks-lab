@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using ParksLab.Models;
 
 namespace ParksLab.Controllers
@@ -28,6 +30,19 @@ namespace ParksLab.Controllers
             return View();
         }
 
+        [Route("parks")]
+        public IActionResult Parks()
+        {
+
+            var json = new WebClient().DownloadString("https://seriouslyfundata.azurewebsites.net/api/parks");
+            List<ParkData> data = JsonConvert.DeserializeObject<List<ParkData>>(json);
+
+
+            ViewBag.json = json;
+            ViewBag.sample = data[0];
+
+            return View();
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
