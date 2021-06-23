@@ -4,4 +4,15 @@
 @{
 }
 
-<p>@ViewBag.sample.ParkID</p>
+<h2>Parks</h2>
+<hr />
+
+
+@foreach (var park in ViewBag.data)
+{
+    <h4>@park.Parkname</h4>
+    <p><i>Borough: </i>@park.Borough</p>
+    <p><i>Acres: </i>@park.Acres</p>
+    <p><i>Description: </i>@park.Description</p>
+    
+}
