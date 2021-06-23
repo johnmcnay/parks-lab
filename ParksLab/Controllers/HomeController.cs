@@ -37,9 +37,9 @@ namespace ParksLab.Controllers
             var json = new WebClient().DownloadString("https://seriouslyfundata.azurewebsites.net/api/parks");
             List<ParkData> data = JsonConvert.DeserializeObject<List<ParkData>>(json);
 
-
-            ViewBag.json = json;
-            ViewBag.sample = data[0];
+            ViewBag.Path = Request.Path.ToString();
+            ViewBag.RouteValues = Request.RouteValues;
+            ViewBag.Query = Request.Query;
 
             return View();
         }
