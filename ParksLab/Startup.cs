@@ -25,7 +25,7 @@ namespace ParksLab
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddSingleton<ParkData>();
+            services.AddSingleton<ParkDataService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

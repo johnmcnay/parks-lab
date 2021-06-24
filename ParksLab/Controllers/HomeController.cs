@@ -15,13 +15,12 @@ namespace ParksLab.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private ParkData _parkData;
+        private ParkDataService _parkDataService;
         
-
-        public HomeController(ILogger<HomeController> logger, ParkData parkData)
+        public HomeController(ILogger<HomeController> logger, ParkDataService parkDataService)
         {
             _logger = logger;
-            _parkData = parkData;
+            _parkDataService = parkDataService;
         }
 
         public IActionResult Index()
@@ -37,16 +36,8 @@ namespace ParksLab.Controllers
         [Route("parkdata")]
         public IActionResult Parks(List<string> search)
         {
-            List<ParkData> data = _parkData.CallApiWithCaching();
-            
-            if (search.Count == 0)
-            {
-                ViewBag.Data = data;
-            }
-            else
-            {
-                ViewBag.Data = _parkData.ParksMatchingQuery(data, search);
-            }
+
+            ViewBag.Data = _parkDataService.GetFilteredData(search);
 
             return View();
         }
