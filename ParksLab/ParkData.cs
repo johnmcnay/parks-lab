@@ -10,8 +10,7 @@ using ParksLab.Controllers;
 namespace ParksLab
 {
     public class ParkData
-    {
-      
+    {      
         public string ParkID { get; set; }
         public string Parkname { get; set; }
         public string SanctuaryName { get; set; }
