@@ -38,6 +38,15 @@ namespace ParksLab.Controllers
         {
 
             ViewBag.Data = _parkDataService.GetFilteredData(search);
+            
+            if (search.Count > 0)
+            {
+                ViewBag.Search = search[0];
+            }
+            else
+            {
+                ViewBag.Search = "";
+            }
 
             return View();
         }
