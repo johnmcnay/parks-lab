@@ -45,7 +45,6 @@ namespace ParksLab.Controllers
         [Route("javascriptparks")]
         public IActionResult JavascriptParks()
         {
-
             return View();
         }
 

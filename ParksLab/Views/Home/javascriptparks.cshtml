@@ -10,7 +10,7 @@
 
     search.addEventListener("keyup", () => {
 
-        let query = search.value;
+        let query = search.value.trim();
         if (query != "") {
             fetch('/park?filter=' + query)
                 .then(response => response.json())
@@ -21,6 +21,8 @@
                     displayParkInfo(data);
 
                 });
+        } else {
+            target.innerHTML = "";
         }
         
         function displayParkInfo(data) {
