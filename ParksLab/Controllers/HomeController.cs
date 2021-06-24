@@ -15,12 +15,13 @@ namespace ParksLab.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private IMemoryCache _cache;
+        private ParkData _parkData;
+        
 
-        public HomeController(ILogger<HomeController> logger, IMemoryCache cache)
+        public HomeController(ILogger<HomeController> logger, ParkData parkData)
         {
             _logger = logger;
-            _cache = cache;
+            _parkData = parkData;
         }
 
         public IActionResult Index()
@@ -33,28 +34,10 @@ namespace ParksLab.Controllers
             return View();
         }
 
-        public List<ParkData> CallApi()
-        {
-            string json;
-            
-            //from code sample in https://docs.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-5.0
-            //Look for cache key.
-            if (!_cache.TryGetValue(CacheKeys.Entry, out json))
-            {
-                // Key not in cache, so get data.
-                json = new WebClient().DownloadString("https://seriouslyfundata.azurewebsites.net/api/parks");
-
-                // Save data in cache and set the relative expiration time
-                _cache.Set(CacheKeys.Entry, json, TimeSpan.FromMinutes(5));
-            }
-
-            return JsonConvert.DeserializeObject<List<ParkData>>(json);
-        }
-
         [Route("parkdata")]
         public IActionResult Parks(List<string> search)
         {
-            List<ParkData> data = CallApi();
+            List<ParkData> data = _parkData.CallApiWithCaching();
             
             if (search.Count == 0)
             {
@@ -62,34 +45,10 @@ namespace ParksLab.Controllers
             }
             else
             {
-                ViewBag.Data = ParksMatchingQuery(data, search);
+                ViewBag.Data = _parkData.ParksMatchingQuery(data, search);
             }
 
             return View();
-        }
-
-        private List<ParkData> ParksMatchingQuery(List<ParkData> data, List<string> queries)
-        {
-            List<ParkData> results = new List<ParkData>();
-
-            foreach (ParkData park in data)
-            {
-                bool hasSearchTerms = true;
-
-                foreach (string query in queries)
-                {
-                    if (!park.Parkname.ToLower().Contains(query.ToLower()) && !park.Description.ToLower().Contains(query.ToLower()))
-                    {
-                        hasSearchTerms = false;
-                        break;
-                    }
-                }
-                if (hasSearchTerms)
-                {
-                    results.Add(park);
-                }
-            }
-            return results;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

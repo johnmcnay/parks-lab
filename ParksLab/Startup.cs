@@ -13,6 +13,7 @@ namespace ParksLab
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -24,6 +25,7 @@ namespace ParksLab
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSingleton<ParkData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
