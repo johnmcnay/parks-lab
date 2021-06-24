@@ -42,6 +42,21 @@ namespace ParksLab.Controllers
             return View();
         }
 
+        [Route("javascriptparks")]
+        public IActionResult JavascriptParks()
+        {
+
+            return View();
+        }
+
+        [Route("park")]
+        public JsonResult Park(List<string> filter) 
+        {
+            List<ParkData> data = _parkDataService.GetFilteredData(filter);
+
+            return Json(data);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
