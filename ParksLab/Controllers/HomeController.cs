@@ -36,7 +36,6 @@ namespace ParksLab.Controllers
         [Route("parkdata")]
         public IActionResult Parks(List<string> search)
         {
-
             Parks data = new Parks();
 
             data.parks = _parkDataService.GetFilteredData(search);
@@ -57,10 +56,9 @@ namespace ParksLab.Controllers
         public IActionResult JavascriptParks()
         {
             List<string> search = new List<string>();
+            Parks data = new Parks();
 
             search.Add("");
-
-            Parks data = new Parks();
 
             data.parks = _parkDataService.GetFilteredData(search);
 
@@ -70,10 +68,10 @@ namespace ParksLab.Controllers
         [Route("park")]
         public JsonResult Park(List<string> filter) 
         {
-
+            List<ParkData> data = new List<ParkData>();
+            
             filter.Add("");
-
-            List<ParkData> data = _parkDataService.GetFilteredData(filter);
+            data = _parkDataService.GetFilteredData(filter);
 
             return Json(data);
         }
