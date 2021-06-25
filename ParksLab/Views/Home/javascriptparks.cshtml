@@ -2,7 +2,16 @@
 <h2>Parks</h2>
 <input id="search" type="text" />
 <hr />
-<div id="target"></div>
+<div id="target">
+    @foreach (var park in ViewBag.Data)
+    {
+        <h4>@park.Parkname</h4>
+        <p><i>Borough: </i>@park.Borough</p>
+        <p><i>Acres: </i>@park.Acres</p>
+        <p><i>Description: </i>@Html.Raw(park.Description)</p>
+    }
+
+</div>
 
 <script>
     let search = document.querySelector("#search");
@@ -18,14 +27,12 @@
 
                     target.innerHTML = "";
 
-                    displayParkInfo(data);
+                    displayParkInfoFromJson(data);
 
                 });
-        } else {
-            target.innerHTML = "";
         }
         
-        function displayParkInfo(data) {
+        function displayParkInfoFromJson(data) {
 
             for (let obj of data) {
 

@@ -54,12 +54,21 @@ namespace ParksLab.Controllers
         [Route("javascriptparks")]
         public IActionResult JavascriptParks()
         {
+            List<string> search = new List<string>();
+
+            search.Add("");
+
+            ViewBag.Data = _parkDataService.GetFilteredData(search);
+
             return View();
         }
 
         [Route("park")]
         public JsonResult Park(List<string> filter) 
         {
+
+            filter.Add("");
+
             List<ParkData> data = _parkDataService.GetFilteredData(filter);
 
             return Json(data);
