@@ -37,7 +37,9 @@ namespace ParksLab.Controllers
         public IActionResult Parks(List<string> search)
         {
 
-            ViewBag.Data = _parkDataService.GetFilteredData(search);
+            Parks data = new Parks();
+
+            data.parks = _parkDataService.GetFilteredData(search);
             
             if (search.Count > 0)
             {
@@ -48,7 +50,7 @@ namespace ParksLab.Controllers
                 ViewBag.Search = "";
             }
 
-            return View();
+            return View(data);
         }
 
         [Route("javascriptparks")]
@@ -58,9 +60,11 @@ namespace ParksLab.Controllers
 
             search.Add("");
 
-            ViewBag.Data = _parkDataService.GetFilteredData(search);
+            Parks data = new Parks();
 
-            return View();
+            data.parks = _parkDataService.GetFilteredData(search);
+
+            return View(data);
         }
 
         [Route("park")]

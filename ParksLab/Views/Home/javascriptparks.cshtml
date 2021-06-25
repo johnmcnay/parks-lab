@@ -1,9 +1,10 @@
-﻿
+﻿@model ParksLab.Models.Parks
+
 <h2>Parks</h2>
 <input id="search" type="text" />
 <hr />
 <div id="target">
-    @foreach (var park in ViewBag.Data)
+    @foreach (var park in Model.parks)
     {
         <h4>@park.Parkname</h4>
         <p><i>Borough: </i>@park.Borough</p>

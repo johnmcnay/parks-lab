@@ -1,15 +1,16 @@
-﻿<h2>Parks</h2>
+﻿@model ParksLab.Models.Parks
+
+<h2>Parks</h2>
 <form method="get">
     <input name="search" type="text" value="@ViewBag.Search" />
     <button type="submit">Search</button>
 </form>
 <hr />
 
-@foreach (var park in ViewBag.data)
+@foreach (var park in Model.parks)
 {
     <h4>@park.Parkname</h4>
     <p><i>Borough: </i>@park.Borough</p>
     <p><i>Acres: </i>@park.Acres</p>
-    <p><i>Description: </i>@Html.Raw(park.Description)</p>
-    
+    <p><i>Description: </i>@Html.Raw(park.Description)</p>   
 }
