@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
@@ -53,26 +54,19 @@ namespace ParksLab
 
         public List<ParkData> ParksMatchingQuery(List<ParkData> data, List<string> queries)
         {
-            List<ParkData> results = new List<ParkData>();
-
-            foreach (ParkData park in data)
+  
+            if (queries[0] == null)
             {
-                bool hasSearchTerms = true;
-
-                foreach (string query in queries)
-                {
-                    if (!park.Parkname.ToLower().Contains(query.ToLower()) && !park.Description.ToLower().Contains(query.ToLower()))
-                    {
-                        hasSearchTerms = false;
-                        break;
-                    }
-                }
-                if (hasSearchTerms)
-                {
-                    results.Add(park);
-                }
+                return new List<ParkData>();
             }
-            return results;
+
+            string query = queries[0].Trim().ToLower();
+
+            var results = from p in data
+                    where p.Parkname.ToLower().Contains(query) || p.Description.ToLower().Contains(query)
+                    select p;
+
+            return results.ToList();
         }
     }
 }
