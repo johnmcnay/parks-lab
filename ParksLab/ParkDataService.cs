@@ -19,7 +19,6 @@ namespace ParksLab
 
         public List<ParkData> CallApiWithCaching()
         {
-            string json;
             List<ParkData> data;
 
             //from code sample in https://docs.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-5.0
@@ -27,7 +26,7 @@ namespace ParksLab
             if (!_cache.TryGetValue(CacheKeys.Entry, out data))
             {
                 // Key not in cache, so get data.
-                json = new WebClient().DownloadString("https://seriouslyfundata.azurewebsites.net/api/parks");
+                string json = new WebClient().DownloadString("https://seriouslyfundata.azurewebsites.net/api/parks");
 
                 data = JsonConvert.DeserializeObject<List<ParkData>>(json);
 
@@ -57,7 +56,7 @@ namespace ParksLab
   
             if (queries[0] == null)
             {
-                return new List<ParkData>();
+                return CallApiWithCaching();
             }
 
             string query = queries[0].Trim().ToLower();
